@@ -20,9 +20,49 @@ namespace SongsAndPerformances.Controllers
         }
 
         // GET: Songs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            return View(await _context.Songs.ToListAsync());
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["GenreSortParm"] = String.IsNullOrEmpty(sortOrder) ? "genre_desc" : "";
+            ViewData["DurationSortParm"] = String.IsNullOrEmpty(sortOrder) ? "duration_desc" : "";
+            string search;
+            /*if (ViewData["CurrentNameFilter"] == "searchByName") search = "searchName";
+            ViewData["CurrentGenreFilter"] = String.IsNullOrEmpty(searchString) ? "searchByGenre" : "";*/
+            var songs = from s in _context.Songs
+                           select s;
+
+            switch (searchString)
+            {
+                case "searchByName":
+                    songs = songs.Where(s => s.Name.Contains(searchString));
+                    
+                    break;
+                case "searchByGenre":
+                    songs = songs.Where(s => s.Genre.Contains(searchString));
+                    
+                    break;
+                default:
+                    
+                    return View(await songs.AsNoTracking().ToListAsync());
+            }
+          
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    songs = songs.OrderByDescending(s => s.Name);
+                    break;
+                case "genre_desc":
+                    songs = songs.OrderByDescending(s => s.Genre);
+                    break;
+                case "duration_desc":
+                    songs = songs.OrderByDescending(s => s.Duration);
+                    break;
+                default:
+                    return View(await songs.AsNoTracking().ToListAsync());
+                    
+            }
+
+            return View(await songs.AsNoTracking().ToListAsync());
         }
 
         // GET: Songs/Details/5
