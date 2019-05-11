@@ -20,32 +20,27 @@ namespace SongsAndPerformances.Controllers
         }
 
         // GET: Songs
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchStringN,string searchStringG)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["GenreSortParm"] = String.IsNullOrEmpty(sortOrder) ? "genre_desc" : "";
             ViewData["DurationSortParm"] = String.IsNullOrEmpty(sortOrder) ? "duration_desc" : "";
-            string search;
-            /*if (ViewData["CurrentNameFilter"] == "searchByName") search = "searchName";
-            ViewData["CurrentGenreFilter"] = String.IsNullOrEmpty(searchString) ? "searchByGenre" : "";*/
+           
             var songs = from s in _context.Songs
-                           select s;
-
-            switch (searchString)
+                               select s;
+            if (!String.IsNullOrEmpty(searchStringN))
             {
-                case "searchByName":
-                    songs = songs.Where(s => s.Name.Contains(searchString));
-                    
-                    break;
-                case "searchByGenre":
-                    songs = songs.Where(s => s.Genre.Contains(searchString));
-                    
-                    break;
-                default:
-                    
-                    return View(await songs.AsNoTracking().ToListAsync());
+                songs = songs.Where(s => s.Name.Contains(searchStringN));
+                ViewData["CurrentNameFilter"] = searchStringN;
             }
-          
+            if (!String.IsNullOrEmpty(searchStringG))
+            {
+                songs = songs.Where(s => s.Name.Contains(searchStringG));
+                ViewData["CurrentGenreFilter"] = searchStringG;
+
+            }
+            
+
             switch (sortOrder)
             {
                 case "name_desc":
@@ -58,7 +53,8 @@ namespace SongsAndPerformances.Controllers
                     songs = songs.OrderByDescending(s => s.Duration);
                     break;
                 default:
-                    return View(await songs.AsNoTracking().ToListAsync());
+                    songs = songs.OrderBy(s => s.Name);
+                    break;
                     
             }
 

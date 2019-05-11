@@ -9,6 +9,7 @@ namespace Songs_and_Performances.Models
     public class Performer
     {
         public int ID { get; set; }
+        [Required]
         public string FullName { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
