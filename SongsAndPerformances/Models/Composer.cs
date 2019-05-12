@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Songs_and_Performances.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,6 +29,6 @@ namespace SongsAndPerformances.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime BirthDate { get; set; }
 
-        
+        public ICollection<ComposerSong> ComposerSongs { get; set; }
     }
 }

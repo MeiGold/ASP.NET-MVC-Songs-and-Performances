@@ -7,22 +7,18 @@
 <h1>Create</h1>
 
 <h4>Performance</h4>
-<hr/>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Song" class="control-label"></label>
-                <select asp-for="SongID" class="form-control" asp-items="ViewBag.SongID">
-                    <option value="">-- Select Song --</option>
-                </select>
+                <label asp-for="SongID" class="control-label"></label>
+                <select asp-for="SongID" class ="form-control" asp-items="ViewBag.SongID"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Performer" class="control-label"></label>
-                <select asp-for="PerformerID" class="form-control" asp-items="ViewBag.PerformerID">
-                    <option value="">-- Select Performer --</option>
-                </select>
+                <label asp-for="PerformerID" class="control-label"></label>
+                <select asp-for="PerformerID" class ="form-control" asp-items="ViewBag.PerformerID"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>

@@ -20,9 +20,45 @@ namespace SongsAndPerformances.Controllers
         }
 
         // GET: Performers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string SearchStringName, string SearchStringNationality)
         {
-            return View(await _context.Performers.ToListAsync());
+            ViewData["FullNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "fullname_desc" : "";
+            ViewData["BirthDateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["NationalitySortParm"] = String.IsNullOrEmpty(sortOrder) ? "nationality_desc" : "";
+
+            var performers = from s in _context.Performers
+                        select s;
+
+            if (!String.IsNullOrEmpty(SearchStringName))
+            {
+                performers = performers.Where(s => s.FullName.Contains(SearchStringName));
+                ViewData["CurrentFullNameFilter"] = SearchStringName;
+            }
+            if (!String.IsNullOrEmpty(SearchStringNationality))
+            {
+                performers = performers.Where(s => s.Nationality.Contains(SearchStringNationality));
+                ViewData["CurrentNationalityFilter"] = SearchStringNationality;
+            }
+            switch (sortOrder)
+            {
+                case "fullname_desc":
+                    performers = performers.OrderByDescending(s => s.FullName);
+                    break;
+                case "Date":
+                    performers = performers.OrderBy(s => s.BirthDate);
+                    break;
+                case "date_desc":
+                    performers = performers.OrderByDescending(s => s.BirthDate);
+                    break;
+                case "nationality_desc":
+                    performers = performers.OrderBy(s => s.Nationality);
+                    break;
+                default:
+                    performers = performers.OrderBy(s => s.FullName);
+                    break;
+            }
+
+            return View(await performers.AsNoTracking().ToListAsync());
         }
 
         // GET: Performers/Details/5

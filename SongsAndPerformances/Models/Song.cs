@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SongsAndPerformances.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,6 +27,6 @@ namespace Songs_and_Performances.Models
         public TimeSpan Duration { get; set; }
 
         public ICollection<Performance> Performances { get; set; }
-        public ICollection<SongsAndPerformances.Models.Composer> Composers { get; set; }
+        public ICollection<ComposerSong> ComposersSong { get; set; }
     }
 }

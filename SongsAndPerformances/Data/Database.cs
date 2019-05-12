@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Songs_and_Performances.Models;
+using SongsAndPerformances.Models;
 
 namespace Songs_and_Performances.Data
 {
@@ -23,5 +24,7 @@ namespace Songs_and_Performances.Data
             modelBuilder.Entity<Performer>().ToTable("Performer");
             modelBuilder.Entity<Performance>().ToTable("Performance");
         }
+
+        public DbSet<SongsAndPerformances.Models.Composer> Composer { get; set; }
     }
 }

@@ -20,14 +20,15 @@ namespace SongsAndPerformances.Controllers
         }
 
         // GET: Songs
-        public async Task<IActionResult> Index(string sortOrder, string searchStringN,string searchStringG)
+        public async Task<IActionResult> Index(string sortOrder, string searchStringN, string searchStringG)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["GenreSortParm"] = String.IsNullOrEmpty(sortOrder) ? "genre_desc" : "";
             ViewData["DurationSortParm"] = String.IsNullOrEmpty(sortOrder) ? "duration_desc" : "";
-           
+
             var songs = from s in _context.Songs
-                               select s;
+                        select s;
+
             if (!String.IsNullOrEmpty(searchStringN))
             {
                 songs = songs.Where(s => s.Name.Contains(searchStringN));
@@ -37,9 +38,7 @@ namespace SongsAndPerformances.Controllers
             {
                 songs = songs.Where(s => s.Name.Contains(searchStringG));
                 ViewData["CurrentGenreFilter"] = searchStringG;
-
             }
-            
 
             switch (sortOrder)
             {
@@ -47,15 +46,14 @@ namespace SongsAndPerformances.Controllers
                     songs = songs.OrderByDescending(s => s.Name);
                     break;
                 case "genre_desc":
-                    songs = songs.OrderByDescending(s => s.Genre);
+                    songs = songs.OrderBy(s => s.Genre);
                     break;
                 case "duration_desc":
-                    songs = songs.OrderByDescending(s => s.Duration);
+                    songs = songs.OrderBy(s => s.Duration);
                     break;
                 default:
                     songs = songs.OrderBy(s => s.Name);
                     break;
-                    
             }
 
             return View(await songs.AsNoTracking().ToListAsync());

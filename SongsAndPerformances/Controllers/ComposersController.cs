@@ -5,28 +5,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SongsAndPerformances.Models;
 using Songs_and_Performances.Data;
-using Songs_and_Performances.Models;
 
 namespace SongsAndPerformances.Controllers
 {
-    public class PerformancesController : Controller
+    public class ComposersController : Controller
     {
         private readonly Database _context;
 
-        public PerformancesController(Database context)
+        public ComposersController(Database context)
         {
             _context = context;
         }
 
-        // GET: Performances
+        // GET: Composers
         public async Task<IActionResult> Index()
         {
-            var database = _context.Performances.Include(p => p.Performer).Include(p => p.Song);
-            return View(await database.ToListAsync());
+            return View(await _context.Composer.ToListAsync());
         }
 
-        // GET: Performances/Details/5
+        // GET: Composers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,45 +33,39 @@ namespace SongsAndPerformances.Controllers
                 return NotFound();
             }
 
-            var performance = await _context.Performances
-                .Include(p => p.Performer)
-                .Include(p => p.Song)
+            var composer = await _context.Composer
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (performance == null)
+            if (composer == null)
             {
                 return NotFound();
             }
 
-            return View(performance);
+            return View(composer);
         }
 
-        // GET: Performances/Create
+        // GET: Composers/Create
         public IActionResult Create()
         {
-            ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName");
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre");
             return View();
         }
 
-        // POST: Performances/Create
+        // POST: Composers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,SongID,PerformerID,Name,Date,Place")] Performance performance)
+        public async Task<IActionResult> Create([Bind("ID,FullName,Nationality,BirthDate")] Composer composer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(performance);
+                _context.Add(composer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName", performance.PerformerID);
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre", performance.SongID);
-            return View(performance);
+            return View(composer);
         }
 
-        // GET: Performances/Edit/5
+        // GET: Composers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,24 +73,22 @@ namespace SongsAndPerformances.Controllers
                 return NotFound();
             }
 
-            var performance = await _context.Performances.FindAsync(id);
-            if (performance == null)
+            var composer = await _context.Composer.FindAsync(id);
+            if (composer == null)
             {
                 return NotFound();
             }
-            ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName", performance.PerformerID);
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre", performance.SongID);
-            return View(performance);
+            return View(composer);
         }
 
-        // POST: Performances/Edit/5
+        // POST: Composers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,SongID,PerformerID,Name,Date,Place")] Performance performance)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,FullName,Nationality,BirthDate")] Composer composer)
         {
-            if (id != performance.ID)
+            if (id != composer.ID)
             {
                 return NotFound();
             }
@@ -106,12 +97,12 @@ namespace SongsAndPerformances.Controllers
             {
                 try
                 {
-                    _context.Update(performance);
+                    _context.Update(composer);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PerformanceExists(performance.ID))
+                    if (!ComposerExists(composer.ID))
                     {
                         return NotFound();
                     }
@@ -122,12 +113,10 @@ namespace SongsAndPerformances.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName", performance.PerformerID);
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre", performance.SongID);
-            return View(performance);
+            return View(composer);
         }
 
-        // GET: Performances/Delete/5
+        // GET: Composers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,32 +124,30 @@ namespace SongsAndPerformances.Controllers
                 return NotFound();
             }
 
-            var performance = await _context.Performances
-                .Include(p => p.Performer)
-                .Include(p => p.Song)
+            var composer = await _context.Composer
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (performance == null)
+            if (composer == null)
             {
                 return NotFound();
             }
 
-            return View(performance);
+            return View(composer);
         }
 
-        // POST: Performances/Delete/5
+        // POST: Composers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var performance = await _context.Performances.FindAsync(id);
-            _context.Performances.Remove(performance);
+            var composer = await _context.Composer.FindAsync(id);
+            _context.Composer.Remove(composer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PerformanceExists(int id)
+        private bool ComposerExists(int id)
         {
-            return _context.Performances.Any(e => e.ID == id);
+            return _context.Composer.Any(e => e.ID == id);
         }
     }
 }
