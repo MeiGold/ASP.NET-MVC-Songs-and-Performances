@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                <a style="color:black" asp-action="Index" asp-route-sortOrder="@ViewData["FullNameSortParm"]">@Html.DisplayNameFor(model => model.FullName)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.BirthDate)
