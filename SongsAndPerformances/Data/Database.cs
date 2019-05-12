@@ -26,5 +26,7 @@ namespace Songs_and_Performances.Data
         }
 
         public DbSet<SongsAndPerformances.Models.Composer> Composer { get; set; }
+
+        public DbSet<SongsAndPerformances.Models.ComposerSong> ComposerSong { get; set; }
     }
 }

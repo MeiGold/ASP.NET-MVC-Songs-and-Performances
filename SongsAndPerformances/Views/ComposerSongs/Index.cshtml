@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SongsAndPerformances.Models.ComposerSong>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Composers-Songs</h1>
+
+<p>
+    <a style="color:indianred" asp-action="Create">Add new song composer</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Song)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Composer)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Song.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Composer.FullName)
+            </td>
+            <td>
+                <a style="color:indianred" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a style="color:indianred" asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a style="color:indianred" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

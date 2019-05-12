@@ -130,7 +130,7 @@ namespace SongsAndPerformances.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName", performance.PerformerID);
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre", performance.SongID);
+            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Name", performance.SongID);
             return View(performance);
         }
 
@@ -148,7 +148,7 @@ namespace SongsAndPerformances.Controllers
                 return NotFound();
             }
             ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName", performance.PerformerID);
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre", performance.SongID);
+            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Name", performance.SongID);
             return View(performance);
         }
 
@@ -185,7 +185,7 @@ namespace SongsAndPerformances.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName", performance.PerformerID);
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre", performance.SongID);
+            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Name", performance.SongID);
             return View(performance);
         }
 
