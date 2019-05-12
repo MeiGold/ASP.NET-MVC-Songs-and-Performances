@@ -20,10 +20,72 @@ namespace SongsAndPerformances.Controllers
         }
 
         // GET: Performances
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchStringName, DateTime searchStringDate, string searchStringPlace)
         {
             var database = _context.Performances.Include(p => p.Performer).Include(p => p.Song);
-            return View(await database.ToListAsync());
+
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["PlaceSortParm"] = sortOrder == "Place" ? "place_desc" : "Place";
+            ViewData["SongSortParm"] = sortOrder == "Song" ? "song_desc" : "Song";
+            ViewData["PerformerSortParm"] = sortOrder == "Performer" ? "performer_desc" : "Performer";
+
+            var performances = from s in database
+                        select s;
+            if (!String.IsNullOrEmpty(searchStringName))
+            {
+                performances = performances.Where(s => s.Name.Contains(searchStringName));
+                ViewData["CurrentNameFilter"] = searchStringName;
+            }
+            if (searchStringDate != null && searchStringDate != DateTime.Parse("1/1/0001 12:00:00 AM"))
+            {
+                performances = performances.Where(s => s.Date.Equals(searchStringDate));
+                ViewData["CurrentDateFilter"] = searchStringDate.ToShortDateString();
+            }
+            if (!String.IsNullOrEmpty(searchStringPlace))
+            {
+                performances = performances.Where(s => s.Place.Contains(searchStringPlace));
+                ViewData["CurrentPlaceFilter"] = searchStringPlace;
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    performances = performances.OrderByDescending(s => s.Name);
+                    break;
+                case "Date":
+                    performances = performances.OrderBy(s => s.Date);
+                    break;
+                case "date_desc":
+                    performances = performances.OrderByDescending(s => s.Date);
+                    break;
+                case "Place":
+                    performances = performances.OrderBy(s => s.Place);
+                    break;
+                case "place_desc":
+                    performances = performances.OrderByDescending(s => s.Place);
+                    break;
+                case "Song":
+                    performances = performances.OrderBy(s => s.Song.Name);
+                    break;
+                case "song_desc":
+                    performances = performances.OrderByDescending(s => s.Song.Name);
+                    break;
+                case "Performer":
+                    performances = performances.OrderBy(s => s.Performer.FullName);
+                    break;
+                case "performer_desc":
+                    performances = performances.OrderByDescending(s => s.Performer.FullName);
+                    break;
+
+                default:
+                    performances = performances.OrderBy(s => s.Name);
+                    break;
+            }
+
+
+
+            return View(await performances.AsNoTracking().ToListAsync());
         }
 
         // GET: Performances/Details/5
@@ -50,7 +112,7 @@ namespace SongsAndPerformances.Controllers
         public IActionResult Create()
         {
             ViewData["PerformerID"] = new SelectList(_context.Performers, "ID", "FullName");
-            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Genre");
+            ViewData["SongID"] = new SelectList(_context.Songs, "ID", "Name");
             return View();
         }
 

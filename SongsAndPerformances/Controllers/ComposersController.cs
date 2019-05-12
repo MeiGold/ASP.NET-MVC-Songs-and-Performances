@@ -20,9 +20,52 @@ namespace SongsAndPerformances.Controllers
         }
 
         // GET: Composers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string SearchStringFullName, string SearchStringNationality, DateTime SearchStringBirthDate)
         {
-            return View(await _context.Composer.ToListAsync());
+            ViewData["FullNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["NationalitySortParm"] = sortOrder == "Nationality" ? "nationality_desc" : "Nationality";
+            ViewData["BirthDateSortParm"] = sortOrder == "BirthDate" ? "birthdate_desc" : "BirthDate";
+
+            var composers = from s in _context.Composer
+                        select s;
+
+            if (!String.IsNullOrEmpty(SearchStringFullName))
+            {
+                composers = composers.Where(s => s.FullName.Contains(SearchStringFullName));
+                ViewData["CurrentFullNameFilter"] = SearchStringFullName;
+            }
+            if (!String.IsNullOrEmpty(SearchStringNationality))
+            {
+                composers = composers.Where(s => s.Nationality.Contains(SearchStringNationality));
+                ViewData["CurrentNationalityFilter"] = SearchStringNationality;
+            }
+            if (SearchStringBirthDate != null && SearchStringBirthDate != DateTime.Parse("1/1/0001 12:00:00 AM"))
+            {
+                composers = composers.Where(s => s.BirthDate.Equals(SearchStringBirthDate));
+                ViewData["CurrentBirthDateFilter"] = SearchStringBirthDate.ToShortDateString();
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    composers = composers.OrderByDescending(s => s.FullName);
+                    break;
+                case "Nationality":
+                    composers = composers.OrderByDescending(s => s.Nationality);
+                    break;
+                case "nationality_desc":
+                    composers = composers.OrderBy(s => s.Nationality);
+                    break;
+                case "BirthDate":
+                    composers = composers.OrderBy(s => s.BirthDate);
+                    break;
+                case "birthdate_desc":
+                    composers = composers.OrderByDescending(s => s.BirthDate);
+                    break;
+                default:
+                    composers = composers.OrderBy(s => s.FullName);
+                    break;
+            }
+            return View(await composers.AsNoTracking().ToListAsync());
         }
 
         // GET: Composers/Details/5

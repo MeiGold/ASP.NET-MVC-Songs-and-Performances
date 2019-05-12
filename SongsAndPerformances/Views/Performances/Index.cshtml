@@ -4,28 +4,44 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Performances</h1>
+
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a style="color:indianred" asp-action="Create">Add new performance</a>
 </p>
+
+<div class="form-actions no-color">
+    <form asp-action="Index" method="get">
+        <p>
+            Find by Name:  <input type="text" name="SearchStringName" value="@ViewData["CurrentNameFilter"]" /><br /><br />
+            Find by Place: <input type="text" name="SearchStringPlace" value="@ViewData["CurrentPlaceFilter"]" /><br /><br />
+            Find by Date:  <input type="date" name="SearchStringDate" value="@ViewData["CurrentDateFilter"]" />
+        </p>
+        <p>
+            <br />
+            <input type="submit" value="Search" style="width:200px;height:40px" class="btn btn-outline-danger" /> |
+            <a style="color:indianred" asp-action="Index">Back to Full List</a>
+        </p>
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a style="color:black" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Date)
+                <a style="color:black" asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Date)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Place)
+                <a style="color:black" asp-action="Index" asp-route-sortOrder="@ViewData["PlaceSortParm"]">@Html.DisplayNameFor(model => model.Place)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Song)
+                <a style="color:black" asp-action="Index" asp-route-sortOrder="@ViewData["SongSortParm"]">@Html.DisplayNameFor(model => model.Song)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Performer)
+                <a style="color:black" asp-action="Index" asp-route-sortOrder="@ViewData["PerformerSortParm"]">@Html.DisplayNameFor(model => model.Performer)</a>
             </th>
             <th></th>
         </tr>
@@ -43,15 +59,15 @@
                 @Html.DisplayFor(modelItem => item.Place)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Song.Genre)
+                @Html.DisplayFor(modelItem => item.Song.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Performer.FullName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a style="color:indianred" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a style="color:indianred" asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a style="color:indianred" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
             </td>
         </tr>
 }

@@ -24,7 +24,7 @@ namespace SongsAndPerformances.Controllers
         {
             ViewData["FullNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "fullname_desc" : "";
             ViewData["BirthDateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["NationalitySortParm"] = String.IsNullOrEmpty(sortOrder) ? "nationality_desc" : "";
+            ViewData["NationalitySortParm"] = sortOrder=="Nationality" ? "nationality_desc" : "Nationality";
 
             var performers = from s in _context.Performers
                         select s;
@@ -50,8 +50,11 @@ namespace SongsAndPerformances.Controllers
                 case "date_desc":
                     performers = performers.OrderByDescending(s => s.BirthDate);
                     break;
-                case "nationality_desc":
+                case "Nationality":
                     performers = performers.OrderBy(s => s.Nationality);
+                    break;
+                case "nationality_desc":
+                    performers = performers.OrderByDescending(s => s.Nationality);
                     break;
                 default:
                     performers = performers.OrderBy(s => s.FullName);

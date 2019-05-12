@@ -20,24 +20,24 @@ namespace SongsAndPerformances.Controllers
         }
 
         // GET: Songs
-        public async Task<IActionResult> Index(string sortOrder, string searchStringN, string searchStringG)
+        public async Task<IActionResult> Index(string sortOrder, string searchStringName, string searchStringGenre)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["GenreSortParm"] = String.IsNullOrEmpty(sortOrder) ? "genre_desc" : "";
-            ViewData["DurationSortParm"] = String.IsNullOrEmpty(sortOrder) ? "duration_desc" : "";
+            ViewData["GenreSortParm"] = sortOrder == "Genre" ? "genre_desc" : "Genre";
+            ViewData["DurationSortParm"] = sortOrder == "Duration" ? "duration_desc" : "Duration";
 
             var songs = from s in _context.Songs
                         select s;
 
-            if (!String.IsNullOrEmpty(searchStringN))
+            if (!String.IsNullOrEmpty(searchStringName))
             {
-                songs = songs.Where(s => s.Name.Contains(searchStringN));
-                ViewData["CurrentNameFilter"] = searchStringN;
+                songs = songs.Where(s => s.Name.Contains(searchStringName));
+                ViewData["CurrentNameFilter"] = searchStringName;
             }
-            if (!String.IsNullOrEmpty(searchStringG))
+            if (!String.IsNullOrEmpty(searchStringGenre))
             {
-                songs = songs.Where(s => s.Name.Contains(searchStringG));
-                ViewData["CurrentGenreFilter"] = searchStringG;
+                songs = songs.Where(s => s.Genre.Contains(searchStringGenre));
+                ViewData["CurrentGenreFilter"] = searchStringGenre;
             }
 
             switch (sortOrder)
@@ -45,11 +45,17 @@ namespace SongsAndPerformances.Controllers
                 case "name_desc":
                     songs = songs.OrderByDescending(s => s.Name);
                     break;
+                case "Genre":
+                    songs=songs.OrderByDescending(s => s.Genre);
+                    break;
                 case "genre_desc":
                     songs = songs.OrderBy(s => s.Genre);
                     break;
-                case "duration_desc":
+                case "Duration":
                     songs = songs.OrderBy(s => s.Duration);
+                    break;
+                case "duration_desc":
+                    songs = songs.OrderByDescending(s => s.Duration);
                     break;
                 default:
                     songs = songs.OrderBy(s => s.Name);
