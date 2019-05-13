@@ -29,9 +29,11 @@ namespace SongsAndPerformances.Controllers
             ViewData["PlaceSortParm"] = sortOrder == "Place" ? "place_desc" : "Place";
             ViewData["SongSortParm"] = sortOrder == "Song" ? "song_desc" : "Song";
             ViewData["PerformerSortParm"] = sortOrder == "Performer" ? "performer_desc" : "Performer";
-
+            
+            
             var performances = from s in database
                         select s;
+
             if (!String.IsNullOrEmpty(searchStringName))
             {
                 performances = performances.Where(s => s.Name.Contains(searchStringName));

@@ -25,7 +25,6 @@ namespace SongsAndPerformances
                 {
                     var context = services.GetRequiredService<Database>();
                     context.Database.EnsureCreated();
-                    
                 }
                 catch (Exception ex)
                 {
