@@ -12,6 +12,7 @@ namespace SongsAndPerformances.Controllers
     {
         public IActionResult Index()
         {
+            
             return View();
         }
 
