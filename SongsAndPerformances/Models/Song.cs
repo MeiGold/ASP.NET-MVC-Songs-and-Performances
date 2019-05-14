@@ -24,6 +24,7 @@ namespace Songs_and_Performances.Models
         public string Genre { get; set; }
 
         [Required]
+        //[DisplayFormat(DataFormatString= "{0:hh-mm-ss}",ApplyFormatInEditMode = true)]
         public TimeSpan Duration { get; set; }
 
         public ICollection<Performance> Performances { get; set; }

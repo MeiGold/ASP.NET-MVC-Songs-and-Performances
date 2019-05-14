@@ -60,11 +60,14 @@ namespace SongsAndPerformances.Controllers
             user.Type = (TypeOfUser)3;
             int count = _context.User.ToArray().Count();
 
-            var obj = _context.User.ToArray();
-            for(int i = 0; i < count; i++)
+            var fyu = from s in _context.User where s.Nickname == user.Nickname select s;
+            var a = fyu.ToArray();
+            if (!a.Any())
             {
-                if (user.Nickname == obj[i].Nickname) return RedirectToAction("False");
+                return RedirectToAction("False");
             }
+            
+
             if (ModelState.IsValid)
             {
                 
